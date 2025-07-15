@@ -1,6 +1,7 @@
 let operand1 = "";
 let operand2 = "";
 let operator = null;
+let lastResult = null;
 
 // --------------------- DEFINE BUTTON VARIABLES ---------------------
 
@@ -49,7 +50,7 @@ equalsBtn.addEventListener("click", () => evaluate(operand1, operand2, operator)
 
 // newNum is a string that will be added to the operand
 function updateOperand(newNum) {
-    if (operator == null) {
+    if (operand1 === "" || operator === null) {
         operand1 += newNum;
         display.textContent = operand1;
     } else {
@@ -59,44 +60,46 @@ function updateOperand(newNum) {
 }
 
 function updateOperator(newOperator) {
-    operator = newOperator;
+    if (operator === null || operand1 === "" || operand2 === "") { // if any operands or operator are missing
+        operator = newOperator;
+    } else {                                                       // if both operands and an operator are already defined
+        operand1 = String(evaluate(operand1, operand2, operator)); // evaluate last expression and set operand1 to it
+        operand2 = "";                                             // reset operand 2 
+
+        operator = newOperator; 
+    }
 }
 
 function clear() {
     operand1 = "";
     operand2 = "";
     operator = null;
+    lastResult = null;
 
     display.textContent = "0";
 }
 
 function evaluate(operand1, operand2, operator) {
-    operand1 = parseInt(operand1);
-    operand2 = parseInt(operand2);
+    operand1 = parseFloat(operand1);
+    operand2 = parseFloat(operand2);
 
     if (operator === '+') {
-        display.textContent = `${operand1 + operand2}`;
+        display.textContent = `${Math.round((operand1 + operand2) * 10000000000) / 10000000000}`;     // round to 10 places
+        return operand1 + operand2;
     } else if (operator === '-') {
-        display.textContent = `${operand1 - operand2}`;
+        display.textContent = `${Math.round((operand1 - operand2) * 10000000000) / 10000000000}`;     // round to 10 places
+        return operand1 - operand2;
     } else if (operator === '*') {
-        display.textContent = `${operand1 * operand2}`;
+        display.textContent = `${Math.round((operand1 * operand2) * 10000000000) / 10000000000}`;     // round to 10 places
+        return operand1 * operand2;
     } else if (operator === '/') {
-        display.textContent = `${operand1 / operand2}`;
+        if (operand2 === 0) {
+            alert("Cannot divide by zero!");
+            clear();
+            return;
+        } else {
+            display.textContent = `${Math.round((operand1 / operand2) * 10000000000) / 10000000000}`; // round to 10 places
+            return operand1 / operand2;
+        }
     }
-}
-
-function add(operand1, operand2) {
-    return operand1 + operand2;
-}
-
-function subtract(operand1, operand2) {
-    return operand1 - operand2;
-}
-
-function multiply(operand1, operand2) {
-    return operand1 * operand2;
-}
-
-function divide(operand1, operand2) {
-    return operand1 / operand2;
 }

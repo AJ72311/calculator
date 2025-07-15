@@ -70,3 +70,7 @@ body {
 #ac-btn.btn {
     background-color: #d6405e;
 }
+
+.btn:active {
+    filter: brightness(0.5);
+}
