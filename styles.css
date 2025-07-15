@@ -14,7 +14,7 @@ body {
     width: 400px;
     height: 575px;
     background-color: #22354f;
-    border-radius: 15px;
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -29,7 +29,7 @@ body {
     width: 92%;
     height: 19%;
     background-color: #6f826f;
-    border-radius: 15px;
+    border-radius: 5px;
     text-align: left;
     display: flex;
     justify-content: flex-start;
