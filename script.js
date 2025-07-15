@@ -6,40 +6,21 @@ let calculationFinished = false;
 // --------------------- DEFINE BUTTON VARIABLES ---------------------
 
 const display = document.querySelector("span");
-
-const zeroBtn = document.querySelector("#zero");
-const oneBtn = document.querySelector("#one");
-const twoBtn = document.querySelector("#two");
-const threeBtn = document.querySelector("#three");
-const fourBtn = document.querySelector("#four");
-const fiveBtn = document.querySelector("#five");
-const sixBtn = document.querySelector("#six");
-const sevenBtn = document.querySelector("#seven");
-const eightBtn = document.querySelector("#eight");
-const nineBtn = document.querySelector("#nine");
-
 const plusBtn = document.querySelector("#add");
 const minusBtn = document.querySelector("#subtract");
 const multiplyBtn = document.querySelector("#multiply");
 const divideBtn = document.querySelector("#divide");
 const equalsBtn = document.querySelector("#equals");
-
 const acBtn = document.querySelector("#ac-btn");
 
 // --------------------- DEFINE EVENT LISTENERS ---------------------
 
-acBtn.addEventListener("click", clear);
+// get all numeric buttons and add event listeners to update operands when clicked
+for (let i = 0; i <= 9; i++) {
+    document.querySelector(`#btn${i}`).addEventListener("click", () => updateOperand(`${i}`));
+}
 
-zeroBtn.addEventListener("click", () => updateOperand('0'));
-oneBtn.addEventListener("click", () => updateOperand('1'));
-twoBtn.addEventListener("click", () => updateOperand('2'));
-threeBtn.addEventListener("click", () => updateOperand('3'));
-fourBtn.addEventListener("click", () => updateOperand('4'));
-fiveBtn.addEventListener("click", () => updateOperand('5'));
-sixBtn.addEventListener("click", () => updateOperand('6'));
-sevenBtn.addEventListener("click", () => updateOperand('7'));
-eightBtn.addEventListener("click", () => updateOperand('8'));
-nineBtn.addEventListener("click", () => updateOperand('9'));
+acBtn.addEventListener("click", clear);
 
 plusBtn.addEventListener("click", () => updateOperator('+'));
 minusBtn.addEventListener("click", () => updateOperator('-'));
@@ -91,6 +72,12 @@ function clear() {
 }
 
 function evaluate(op1, op2, currOperator) {
+    if (op1 === "" || op2 === "" || currOperator === null) {
+        alert("Please enter two operands and an operator!");
+        clear();
+        return;
+    }
+
     op1 = parseFloat(op1);
     op2 = parseFloat(op2);
 
