@@ -1,7 +1,7 @@
 let operand1 = "";
 let operand2 = "";
 let operator = null;
-let lastResult = null;
+let calculationFinished = false;
 
 // --------------------- DEFINE BUTTON VARIABLES ---------------------
 
@@ -48,9 +48,16 @@ divideBtn.addEventListener("click", () => updateOperator('/'));
 
 equalsBtn.addEventListener("click", () => evaluate(operand1, operand2, operator));
 
-// newNum is a string that will be added to the operand
+// triggered by number inputs, newNum is a string that will be added to the operand
 function updateOperand(newNum) {
-    if (operand1 === "" || operator === null) {
+    // if a calculation was already run, clear operands and operator for new input
+    // calculationFinished is false by default, but gets set to true when running a calculation with evaluate()
+    if (calculationFinished) {
+        calculationFinished = false;
+        clear();
+    }
+
+    if (operand1 === "" || operator === null) { // if either operand1 or operator are missing
         operand1 += newNum;
         display.textContent = operand1;
     } else {
@@ -59,6 +66,7 @@ function updateOperand(newNum) {
     }
 }
 
+// triggered by operator inputs
 function updateOperator(newOperator) {
     if (operator === null || operand1 === "" || operand2 === "") { // if any operands or operator are missing
         operator = newOperator;
@@ -67,6 +75,10 @@ function updateOperator(newOperator) {
         operand2 = "";                                             // reset operand 2 
 
         operator = newOperator; 
+        
+        // override evaluate() setting calculationFinished to true to allow for operation chaining
+        // this ensures the calculator isn't cleared while the user inputs operand2
+        calculationFinished = false;
     }
 }
 
@@ -74,32 +86,35 @@ function clear() {
     operand1 = "";
     operand2 = "";
     operator = null;
-    lastResult = null;
 
     display.textContent = "0";
 }
 
-function evaluate(operand1, operand2, operator) {
-    operand1 = parseFloat(operand1);
-    operand2 = parseFloat(operand2);
+function evaluate(op1, op2, currOperator) {
+    op1 = parseFloat(op1);
+    op2 = parseFloat(op2);
 
-    if (operator === '+') {
-        display.textContent = `${Math.round((operand1 + operand2) * 10000000000) / 10000000000}`;     // round to 10 places
-        return operand1 + operand2;
-    } else if (operator === '-') {
-        display.textContent = `${Math.round((operand1 - operand2) * 10000000000) / 10000000000}`;     // round to 10 places
-        return operand1 - operand2;
-    } else if (operator === '*') {
-        display.textContent = `${Math.round((operand1 * operand2) * 10000000000) / 10000000000}`;     // round to 10 places
-        return operand1 * operand2;
-    } else if (operator === '/') {
-        if (operand2 === 0) {
+    if (currOperator === '+') {
+        display.textContent = `${Math.round((op1 + op2) * 10000000000) / 10000000000}`;     // round to 10 places
+        calculationFinished = true;
+        return op1 + op2;
+    } else if (currOperator === '-') {
+        display.textContent = `${Math.round((op1 - op2) * 10000000000) / 10000000000}`;     // round to 10 places
+        calculationFinished = true;
+        return op1 - op2;
+    } else if (currOperator === '*') {
+        display.textContent = `${Math.round((op1 * op2) * 10000000000) / 10000000000}`;     // round to 10 places
+        calculationFinished = true;
+        return op1 * op2;
+    } else if (currOperator === '/') {
+        if (op2 === 0) {
             alert("Cannot divide by zero!");
             clear();
             return;
         } else {
-            display.textContent = `${Math.round((operand1 / operand2) * 10000000000) / 10000000000}`; // round to 10 places
-            return operand1 / operand2;
+            display.textContent = `${Math.round((op1 / op2) * 10000000000) / 10000000000}`; // round to 10 places
+            calculationFinished = true;
+            return op1 / op2;
         }
     }
 }
